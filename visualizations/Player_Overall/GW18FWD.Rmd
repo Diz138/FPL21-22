@@ -1,0 +1,90 @@
+---
+title: " GW18 - XGvsPrice"
+author: "Matthew Dzwil"
+date: "12/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup, echo = FALSE}
+library(ggplot2)
+```
+
+## Expected Goals per 90 minutes in the Premier League versus Fantasy Premier League Price. 
+
+
+```{r}
+
+GW18fwd <- read.csv(file = 'GW18FWD.csv')
+GW18fwd_clean <- GW18fwd[GW18fwd$minutes > 200, ]
+GW18fwd_clean$xGAp90 <- GW18fwd_clean$xGp90 + GW18fwd_clean$xAp90
+GW18fwd_clean$xoutperform <-  (GW18fwd_clean$goals_scored + GW18fwd_clean$assists) - (GW18fwd_clean$xG + GW18fwd_clean$xA)
+GW18fwd_clean400 <- GW18fwd_clean[GW18fwd_clean$minutes > 400, ]
+GW18fwd_clean
+```
+
+
+
+```{r}
+ggplot(GW18fwd_clean, aes(x=xGp90, y=price)) +
+  geom_point() +
+  labs(title = "Expected Goals (xG) per 90 minutes vs. FPL Price", x = "xG per 90", y = "Price", caption = "Requirements: Min. 400 PL minutes played") +
+  theme_classic()+
+  theme(plot.title = element_text(hjust = .5),plot.caption = element_text(color = 'red'))+
+  geom_text(aes(label=ifelse(xGp90>.9,as.character(name),'')), nudge_x = -.2, color = 'green4') +
+  geom_text(aes(label=ifelse(xGp90>.75 &  xGp90<.8,as.character(name),'')), nudge_x = .16, color = 'red')+
+  geom_text(aes(label=ifelse(price>12.1,as.character(name),'')), nudge_y = -.11, color = 'green4')
+```
+
+
+```{r}
+ggplot(GW18fwd_clean, aes(x=xGp90, y=price)) +
+  labs(title = "Expected Goals (xG) per 90 minutes vs. FPL Price", x = "xG per 90", y = "Price", caption = "Requirements: Min. 400 PL minutes played") +
+  theme_classic()+
+  theme(plot.title = element_text(hjust = .5),plot.caption = element_text(color = 'red'))+
+  geom_text(aes(label=as.character(second_name)), size = 3) 
+```
+
+
+```{r}
+GW18fwd_cleanXG <- GW18fwd_clean[GW18fwd_clean$xGp90 > .39, ]
+ggplot(GW18fwd_cleanXG, aes(x=xGp90, y=price)) +
+  labs(title = "Expected Goals (xG) per 90 minutes vs. FPL Price", x = "xG per 90", y = "Price", caption = "Requirements: Min. 400 PL minutes played and xGp90 greater than 0.39") +
+  theme_classic()+
+  theme(plot.title = element_text(hjust = .5),plot.caption = element_text(color = 'red'))+
+  geom_text(aes(label=as.character(second_name)))
+```
+
+
+
+
+
+```{r}
+ggplot(GW18fwd_clean400, aes(x=xGAp90, y=price)) +
+  labs(title = "Expected Goals & Assists (xG&A) per 90 minutes vs. FPL Price", x = "xG&A per 90", y = "Price", caption = "Requirements: Min. 400 PL minutes played") +
+  theme_classic()+
+  theme(plot.title = element_text(hjust = .5),plot.caption = element_text(color = 'red'))+
+  geom_text(aes(label=as.character(second_name)), size = 3)
+```
+
+
+```{r}
+ggplot(GW18fwd_clean400, aes(x=xoutperform, y=price)) +
+  labs(title = "Performace vs. FPL Price", x = "G&A-XG&A", y = "Price", caption = "Requirements: Min. 400 PL minutes played") +
+  theme_classic()+
+  theme(plot.title = element_text(hjust = .5),plot.caption = element_text(color = 'red'))+
+  geom_text(aes(label=as.character(second_name)), size = 3) 
+```
+
+
+
+```{r}
+ggplot(GW18fwd_clean400, aes(x=xGAp90, y=selected_by_percent)) +
+  labs(title = "Expected Goals & Assists (xG&A) per 90 minutes vs. FPL Price vs. Selection %", x = "xG&A per 90", y = "Selection %", caption = "Requirements: Min. 400 PL minutes played") +
+  theme_classic()+
+  theme(plot.title = element_text(hjust = .5),plot.caption = element_text(color = 'red'))+
+  geom_text(aes(label=as.character(second_name)), size = 2)
+```
