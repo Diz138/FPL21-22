@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r setup, echo = FALSE}
+```{r, echo = FALSE}
 library(ggplot2)
 ```
 

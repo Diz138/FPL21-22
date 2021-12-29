@@ -1,0 +1,31 @@
+---
+title: "FPL Stats up until GW17"
+author: "Matthew Dzwil"
+date: "12/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = FALSE}
+library(ggplot2)
+```
+
+```{r}
+setwd("C:/Users/mattd/Documents/GitHub/FPL21-22/data/Player_Weekly")
+df <- read.csv(file = 'UntilGW17.csv')
+UGW17 = subset(df, select = -c(first_name, kickoff_time, was_home) )
+UGW175 <- UGW17[UGW17$round > 12, ]
+UGW17last5mean <- aggregate(UGW175,by=list(UGW175$last_name),FUN=mean)
+UGW17last5mean[,-31]
+UGW17last5sum <- aggregate(UGW175,by=list(UGW175$last_name),FUN=sum)
+UGW17last5sum[,-31]
+```
+
+
+```{r}
+
+```
+
